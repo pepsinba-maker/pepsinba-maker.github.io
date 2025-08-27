@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Asta Giocatori</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      label { font-weight: bold; display: block; margin-top: 10px; }
+      select, input { width: 100%; padding: 5px; margin-top: 5px; }
+      button { margin-top: 15px; padding: 10px; width: 100%; font-weight: bold; }
+      #result { margin-top: 15px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h2>Invia Offerta</h2>
+    <form id="offerForm">
+      <label for="gm">Nome GM:</label>
+      <select id="gm" required>
+        <option value="">-- Seleziona GM --</option>
+        <option value="Bezzi">Bezzi</option>
+        <option value="Bilbo">Bilbo</option>
+        <option value="Bob">Bob</option>
+        <option value="Bonny">Bonny</option>
+        <option value="Ema">Ema</option>
+        <option value="Fornari">Fornari</option>
+        <option value="Joao">Joao</option>
+        <option value="Lapo">Lapo</option>
+        <option value="Lomb">Lomb</option>
+        <option value="Sven">Sven</option>
+      </select>
+
+      <label for="giocatore">Nome Giocatore:</label>
+      <input type="text" id="giocatore" required>
+
+      <label for="offerta">Offerta (€):</label>
+      <input type="number" id="offerta" min="1" required>
+
+      <button type="submit">Invia Offerta</button>
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+      document.getElementById("offerForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const data = {
+          gm: document.getElementById("gm").value,
+          giocatore: document.getElementById("giocatore").value,
+          offerta: document.getElementById("offerta").value
+        };
+
+        google.script.run
+          .withSuccessHandler((msg) => {
+            document.getElementById("result").innerText = msg;
+            document.getElementById("offerForm").reset();
+          })
+          .withFailureHandler((err) => {
+            document.getElementById("result").innerText = "Errore: " + err.message;
+          })
+          .salvaOfferta(data); // chiama la funzione lato server
+      });
+    </script>
+  </body>
+</html>

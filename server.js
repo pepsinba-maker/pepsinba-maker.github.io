@@ -39,3 +39,27 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server in ascolto sulla porta ${PORT}`);
 });
+
+app.get('/api/offerta', async (req, res) => {
+  const key = req.query.key;  // recupera la chiave dalla query string ?key=xxx
+  if (!key) return res.status(400).json({ error: 'Chiave mancante' });
+
+  try {
+    const snapshot = await db.collection('offerte').where('chiavePubblica', '==', key).limit(1).get();
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'Offerta non trovata' });
+    }
+
+    const doc = snapshot.docs[0];
+    const data = doc.data();
+
+    // Cancella il documento one-time
+    await doc.ref.delete();
+
+    // Restituisci l'offerta cifrata
+    res.json({ offertaCifrata: data.offertaCifrata });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Errore server' });
+  }
+});

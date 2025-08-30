@@ -67,7 +67,7 @@ app.get('/api/offerta', async (req, res) => {
 app.post('/api/aggiungi-offerta', async (req, res) => {
   const { chiavePubblica, offertaCifrata, giocatore, gm, data } = req.body;
   
-  if (!chiavePubblica || !offertaCifrata || !giocatore || !gm) {
+  if (!offertaCifrata || !giocatore || !gm) {
     return res.status(400).json({ error: 'Dati mancanti' });
   }
   

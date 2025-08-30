@@ -63,3 +63,25 @@ app.get('/api/offerta', async (req, res) => {
     res.status(500).json({ error: 'Errore server' });
   }
 });
+
+app.post('/api/aggiungi-offerta', async (req, res) => {
+  const { chiavePubblica, offertaCifrata, giocatore, gm } = req.body;
+  
+  if (!chiavePubblica || !offertaCifrata || !giocatore || !gm) {
+    return res.status(400).json({ error: 'Dati mancanti' });
+  }
+  
+  try {
+    await db.collection('offerte').add({
+      chiavePubblica,
+      offertaCifrata,
+      giocatore,
+      gm,
+      timestamp: admin.firestore.FieldValue.serverTimestamp()
+    });
+    res.status(200).json({ message: 'Offerta salvata con successo' });
+  } catch (error) {
+    console.error('Errore salvataggio offerta:', error);
+    res.status(500).json({ error: 'Errore server' });
+  }
+});

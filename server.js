@@ -65,7 +65,7 @@ app.get('/api/offerta', async (req, res) => {
 });
 
 app.post('/api/aggiungi-offerta', async (req, res) => {
-  const { chiavePubblica, offertaCifrata, giocatore, gm } = req.body;
+  const { chiavePubblica, offertaCifrata, giocatore, gm, data } = req.body;
   
   if (!chiavePubblica || !offertaCifrata || !giocatore || !gm) {
     return res.status(400).json({ error: 'Dati mancanti' });
@@ -77,6 +77,7 @@ app.post('/api/aggiungi-offerta', async (req, res) => {
       offertaCifrata,
       giocatore,
       gm,
+      data,
       timestamp: admin.firestore.FieldValue.serverTimestamp()
     });
     res.status(200).json({ message: 'Offerta salvata con successo' });
